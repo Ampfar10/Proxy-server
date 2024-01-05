@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Flask Proxy Server</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            transition: background-color 0.5s;
+        }
+
+        body.dark-mode {
+            background-color: #333;
+            color: #fff;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        form {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        input[type="text"] {
+            width: 400px;
+            padding: 10px;
+            font-size: 16px;
+        }
+
+        .button-container {
+            margin-top: 10px;
+            display: flex;
+            justify-content: center;
+        }
+
+        button[type="submit"],
+        .copy-button,
+        .view-button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+
+        button[type="submit"]:hover,
+        .copy-button:hover,
+        .view-button:hover {
+            background-color: #45a049;
+        }
+
+        .copy-button,
+        .view-button {
+            margin-left: 10px;
+        }
+
+        h2 {
+            margin-top: 30px;
+        }
+
+        pre {
+            background-color: #f1f1f1;
+            padding: 20px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .error-message {
+            color: red;
+            margin-top: 10px;
+        }
+
+        /* Dark mode switch styles */
+        .flipswitch {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            width: 77px;
+        }
+
+        .flipswitch input[type=checkbox] {
+            display: none;
+        }
+
+        .flipswitch-label {
+            display: block;
+            overflow: hidden;
+            cursor: pointer;
+            border: 0px solid #999999;
+            border-radius: 50px;
+        }
+
+        .flipswitch-inner {
+            width: 200%;
+            margin-left: -100%;
+            transition: margin 0.3s ease-in 0s;
+        }
+
+        .flipswitch-inner:before,
+        .flipswitch-inner:after {
+            float: left;
+            width: 50%;
+            height: 46px;
+            padding: 0;
+            line-height: 46px;
+            font-size: 21px;
+            color: white;
+            font-family: Trebuchet, Arial, sans-serif;
+            font-weight: bold;
+            box-sizing: border-box;
+        }
+
+        .flipswitch-inner:before {
+            content: "Dark";
+            padding-left: 11px;
+            background-color: #FFFFFF;
+            color: #000000;
+        }
+
+        .flipswitch-inner:after {
+            content: "Light";
+            padding-right: 11px;
+            background-color: #000000;
+            color: #FFFFFF;
+            text-align: right;
+        }
+
+        .flipswitch-switch {
+            width: 5px;
+            margin: 20.5px;
+            background: #FFFFFF;
+            border: 0px solid #999999;
+            border-radius: 50px;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            right: 30px;
+            transition: all 0.3s ease-in 0s;
+        }
+
+        .flipswitch-cb:checked + .flipswitch-label .flipswitch-inner {
+            margin-left: 0;
+        }
+
+        .flipswitch-cb:checked + .flipswitch-label .flipswitch-switch {
+            right: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="flipswitch">
+        <input type="checkbox" class="flipswitch-cb" id="fs" checked>
+        <label class="flipswitch-label" for="fs">
+            <div class="flipswitch-inner"></div>
+            <div class="flipswitch-switch"></div>
+        </label>
+    </div>
+
+    <h1>Flask Web Scraper</h1>
+
+    <form action="/" method="post" onsubmit="return validateUrl()">
+        <label for="url">Target URL:</label>
+        <input type="text" id="url" name="url" placeholder="Enter target URL" required>
+        <div class="button-container">
+            <button type="submit">Submit</button>
+            <button class="copy-button" onclick="copyCode()">Copy HTML</button>
+            <a href="https://html-preview-1.ampfar10.repl.co/" target="_blank"><button class="view-button" type="button">View HTML</button></a>
+        </div>
+        <div id="error-message" class="error-message"></div>
+    </form>
+
+    {% if url and response %}
+    <h2>Response from {{ url }}:</h2>
+    <pre>{{ response }}</pre>
+    {% endif %}
+
+    <script>
+        function validateUrl() {
+            const urlInput = document.getElementById('url');
+            const url = urlInput.value;
+
+            if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                const errorMessage = document.getElementById('error-message');
+                errorMessage.textContent = 'Please enter a URL starting with "http://" or "https://"';
+                urlInput.focus();
+                return false;
+            }
+
+            return true;
+        }
+
+        function copyCode() {
+            const codeElement = document.querySelector('pre');
+            const codeText = codeElement.innerText;
+
+            const tempTextarea = document.createElement('textarea');
+            tempTextarea.value = codeText;
+
+            document.body.appendChild(tempTextarea);
+
+            tempTextarea.select();
+            document.execCommand('copy');
+
+            document.body.removeChild(tempTextarea);
+        }
+
+        // Dark mode switch functionality
+        const darkModeSwitch = document.getElementById('fs');
+        darkModeSwitch.addEventListener('change', () => {
+            document.body.classList.toggle('dark-mode', darkModeSwitch.checked);
+        });
+    </script>
+</body>
+</html>
